@@ -1,6 +1,6 @@
 Table Asset {
   AssetId string [pk, note: "Mã định danh: Mã định danh duy nhất cho tài sản (do hệ thống tạo)\n\nAsset ID: Unique identifier for the asset (system-generated)"]
-  AssetTag string [note: "Mã tài sản: Mã dễ đọc của tài sản\n\nAsset Tag: Human-readable asset tag"]
+  AssetTag string [not null, note: "Mã tài sản: Mã dễ đọc của tài sản\n\nAsset Tag: Human-readable asset tag"]
   Description string [note: "Tên tài sản: Mô tả ngắn gọn về tài sản\n\nDescription: Brief description of the asset"]
   AssetType string [note: "Loại TS: Loại/danh mục tài sản (ví dụ: Xe đầu kéo)\n\nAsset Type: Type/category of the asset (e.g., Xe đầu kéo)"]
   OwningUnit string [note: "ĐV sở hữu: Đơn vị/bộ phận sở hữu tài sản\n\nOwning Unit: Unit or department that owns the asset"]
@@ -17,55 +17,105 @@ Table Asset {
   ChassisNum string [note: "Số khung: Số khung xe\n\nChassis Number: Chassis serial number"]
   EngineNum string [note: "Số máy: Số máy động cơ\n\nEngine Number: Engine serial number"]
   TechnicalFeaturesNote text [note: "Đặc điểm kỹ thuật: Các thông số kỹ thuật bổ sung\n\nTechnical Features: Additional technical specifications"]
-}
-
-Table Inspection {
-  InspectionId int [pk, note: "Mã kiểm kê: định danh duy nhất cho phiếu kiểm kê"]
-  AssetId string [ref: > Asset.AssetId, note: "Tài sản: khoá ngoại tham chiếu tới bảng Asset"]
-
-  Location string [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
-  InspectionDate date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
-  Inspector string [note: "Người kiểm kê: tên hoặc mã người thực hiện"]
-  InspectorId string [note: "Mã người kiểm kê: dùng nếu liên kết từ hệ thống người dùng"]
-  Technician string [note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
-
-  IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
-  AbsenceReason text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
-
   
   InitialCondition text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or intake"]
   TechnicalCondition text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
-  CurrentCondition text [note: "Tình trạng hiện tại: tình trạng sử dụng hiện tại (ví dụ: sử dụng tốt, hư hỏng)"]
-  Color string [note: "Màu: màu sắc quan sát được của tài sản"]
+}
 
-  Images text [note: "Hình ảnh: đường dẫn hoặc liên kết đến tệp hình ảnh"]
+Table Inspection {
+  // Relationships
+  InspectionId UUID [pk]
+  AssignmentId UUID [ref: > Assignment.AssignmentId, note: "Liên kết với phân công (nếu có)"]
+  InspectorId UUID [not null, ref: > User.UserId, note: "Người thực hiện kiểm kê"]
+  TechnicianId UUID [ref: > User.UserId, note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
+  AssetId UUID [not null, ref: > Asset.AssetId, note: "Tài sản được kiểm kê"]
 
-  InUse boolean [note: "Đang sử dụng: tài sản đang được sử dụng"]
-  NotInUse boolean [note: "Ngừng sử dụng: tài sản không còn sử dụng"]
-  NotInUseReason text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
+  // Form
+  IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
+  AbsenceReason text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
 
-  UnitProposal text [note: "Đề xuất của Đơn vị: khuyến nghị từ đơn vị sử dụng"]
+  UsageStatus Enum('Đang sử dụng', 'Ngừng sử dụng') [note: "Tình trạng sử dụng của tài sản tại ngày kiểm kê"]
+  DeactivationReason text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
+  ConditionRating Int [note: "Điểm đánh giá kiểm kê, từ 1-5 với 5 = Tốt, 4 = Khá, 3 = Trung bình, 2 = Kém, 1 = Hư hỏng"]
+  ConditionDescription text [note: "Mô tả hiện trạng tài sản"]
+  OperationalFeedback text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
   AdditionalNotes text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
 
-  InspectionType string [note: "Loại kiểm kê: Định kỳ / Bổ sung / Khẩn cấp"]
-  InspectionStatus string [note: "Trạng thái kiểm kê: Nháp / Hoàn tất / Đã xác minh"]
-  VerifiedBy string [note: "Xác minh bởi: tên hoặc mã người xác minh"]
-  InspectionScore float [note: "Điểm đánh giá kiểm kê: đánh giá định lượng nếu có"]
-  GeoLocation string [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
-  InspectionSource string [note: "Nguồn kiểm kê: ứng dụng, web, giấy tờ, v.v."]
-  Deleted boolean [note: "Đã xoá: cờ xoá mềm"]
+  InspectionType Enum('Định kỳ', 'Bổ sung', 'Khẩn cấp') [note: "Loại kiểm kê, mặc định = Định kỳ"]
+  InspectionMethod Enum('Manual')
+  Location string [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
+  AssignmentType Enum('Planned', 'Manual') [note: "Phương thức phân công kiểm kê: Được phân công hoặc Tự chọn"]
+  
+  // State
+  InspectionStatus Enum('Assigned', 'In progress', 'Completed', 'Verified', 'Cancelled') [note: "Trạng thái kiểm kê"]
 
-  CreatedAt datetime [note: "Thời gian tạo"]
-  UpdatedAt datetime [note: "Thời gian cập nhật"]
+  // Metadata
+  InspectionDate Date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
+  GeoLocation string [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
+ 
+  Created datetime [note: "Thời gian được tạo"]
+  Verified DateTime [note: "Thời gian được xác nhận"]
+  LastModified datetime [note: "Thời gian cập nhật gần nhất"]
+  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+
+  CreatedBy Datetime [note: "Người tạo"]
+  VerifiedBy string [note: "Xác minh bởi: tên hoặc mã người xác minh"]
+  ModifiedBy Datetime [note: "Người cập nhật"]
+  
+  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed')
+  SyncRetryCount Int
+  SyncErrorMessage text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
 }
 
 Table Media {
   MediaId UUID [pk]
-  InspectionId UUID [ref: > Inspection.InspectionId]
+  InspectionId UUID [not null, ref: > Inspection.InspectionId]
+  AssetId UUID [not null, ref: > Asset.AssetId]
+
+  // Metadata
   Type Enum('image', 'video')
   FilePath String
   CapturedAt timestamp
   CapturedBy String
-  Note Text
+  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+
+  // Người dùng nhập
+  Caption Text
+
+  // Sync
+  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed')
+  SyncRetryCount Int
+  SyncErrorMessage text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
 }
 
+Table User {
+  UserId UUID [pk]
+  Email Varchar
+  Role Enum('Kế hoạch', 'Quản lý', 'Kiểm kê', 'Kỹ thuật')
+  Created Timestamp
+  Updated Timestamp
+  LastLogin Timestamp
+}
+
+Table Assignment {
+  AssignmentId UUID [pk, note: "ID phân công"]
+  AssetId UUID [ref: > Asset.AssetId, note: "Tài sản cần kiểm kê"]
+  InspectorId UUID [ref: > User.UserId, note: "Người được phân công"]
+  PlannedDate date [note: "Ngày dự kiến kiểm kê"]
+  TimeSlot Enum('Morning', 'Afternoon', 'Full-day') [note: "Khung giờ"]
+  Status Enum('Planned', 'In Progress', 'Completed', 'Cancelled') [note: "Trạng thái phân công"]
+  IsPrimary boolean [note: "Có phải là người kiểm kê chính không"]
+  CreatedBy String [note: "Người tạo"]
+  CreatedAt timestamp [note: "Thời gian tạo"]
+  Notes Text [note: "Ghi chú"]
+}
+
+Table Error {
+  ErrorId UUID [pk]
+  EntityType Enum('Inspection', 'Media', 'Assignment')
+  EntityId UUID [note: "ID of the failed record"]
+  UserId UUID [ref: > User.UserId]
+  Timestamp datetime
+  Message text
+  Code string [note: "Optional structured code"]
+}
