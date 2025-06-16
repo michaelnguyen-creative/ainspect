@@ -1,0 +1,71 @@
+Table Asset {
+  AssetId string [pk, note: "Mã định danh: Mã định danh duy nhất cho tài sản (do hệ thống tạo)\n\nAsset ID: Unique identifier for the asset (system-generated)"]
+  AssetTag string [note: "Mã tài sản: Mã dễ đọc của tài sản\n\nAsset Tag: Human-readable asset tag"]
+  Description string [note: "Tên tài sản: Mô tả ngắn gọn về tài sản\n\nDescription: Brief description of the asset"]
+  AssetType string [note: "Loại TS: Loại/danh mục tài sản (ví dụ: Xe đầu kéo)\n\nAsset Type: Type/category of the asset (e.g., Xe đầu kéo)"]
+  OwningUnit string [note: "ĐV sở hữu: Đơn vị/bộ phận sở hữu tài sản\n\nOwning Unit: Unit or department that owns the asset"]
+  OperatingUnit string [note: "ĐV khai thác: Đơn vị/bộ phận vận hành tài sản\n\nOperating Unit: Unit or department operating the asset"]
+  LicensePlate string [note: "Biển số: Số biển số chính\n\nLicense Plate: Primary license plate number"]
+  SecondaryLicensePlate string [note: "Biển số 2: Số biển số phụ hoặc thay thế\n\nSecondary License Plate: Secondary or alternate license plate"]
+  AssetNum string [note: "Mã TS: Số tài sản nội bộ trong ERP/Finance\n\nAsset Number: Internal ERP/Finance asset number"]
+  ManufactureYear int [note: "Năm sản xuất: Năm sản xuất tài sản\n\nManufacture Year: Year the asset was manufactured"]
+  CountryOfOrigin string [note: "Nơi sản xuất: Quốc gia sản xuất tài sản\n\nCountry of Origin: Country where the asset was manufactured"]
+  Manufacturer string [note: "Công ty sản xuất: Tên nhà sản xuất\n\nManufacturer: Manufacturer name"]
+  LoadCapacity float [note: "Trọng tải: Khả năng tải trọng tối đa (ví dụ: 36.830 tấn)\n\nLoad Capacity: Maximum load capacity in tons (e.g., 36.830)"]
+  Model string [note: "Model: Chi tiết model (ví dụ: 2 cầu, không giường)\n\nModel: Model details (e.g., 2 cầu, không giường)"]
+  StructureType string [note: "Cấu tạo: Cấu hình kết cấu (ví dụ: 2 cầu)\n\nStructure Type: Structural configuration (e.g., 2 cầu)"]
+  ChassisNum string [note: "Số khung: Số khung xe\n\nChassis Number: Chassis serial number"]
+  EngineNum string [note: "Số máy: Số máy động cơ\n\nEngine Number: Engine serial number"]
+  TechnicalFeaturesNote text [note: "Đặc điểm kỹ thuật: Các thông số kỹ thuật bổ sung\n\nTechnical Features: Additional technical specifications"]
+}
+
+Table Inspection {
+  InspectionId int [pk, note: "Mã kiểm kê: định danh duy nhất cho phiếu kiểm kê"]
+  AssetId string [ref: > Asset.AssetId, note: "Tài sản: khoá ngoại tham chiếu tới bảng Asset"]
+
+  Location string [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
+  InspectionDate date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
+  Inspector string [note: "Người kiểm kê: tên hoặc mã người thực hiện"]
+  InspectorId string [note: "Mã người kiểm kê: dùng nếu liên kết từ hệ thống người dùng"]
+  Technician string [note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
+
+  IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
+  AbsenceReason text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
+
+  
+  InitialCondition text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or intake"]
+  TechnicalCondition text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
+  CurrentCondition text [note: "Tình trạng hiện tại: tình trạng sử dụng hiện tại (ví dụ: sử dụng tốt, hư hỏng)"]
+  Color string [note: "Màu: màu sắc quan sát được của tài sản"]
+
+  Images text [note: "Hình ảnh: đường dẫn hoặc liên kết đến tệp hình ảnh"]
+
+  InUse boolean [note: "Đang sử dụng: tài sản đang được sử dụng"]
+  NotInUse boolean [note: "Ngừng sử dụng: tài sản không còn sử dụng"]
+  NotInUseReason text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
+
+  UnitProposal text [note: "Đề xuất của Đơn vị: khuyến nghị từ đơn vị sử dụng"]
+  AdditionalNotes text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
+
+  InspectionType string [note: "Loại kiểm kê: Định kỳ / Bổ sung / Khẩn cấp"]
+  InspectionStatus string [note: "Trạng thái kiểm kê: Nháp / Hoàn tất / Đã xác minh"]
+  VerifiedBy string [note: "Xác minh bởi: tên hoặc mã người xác minh"]
+  InspectionScore float [note: "Điểm đánh giá kiểm kê: đánh giá định lượng nếu có"]
+  GeoLocation string [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
+  InspectionSource string [note: "Nguồn kiểm kê: ứng dụng, web, giấy tờ, v.v."]
+  Deleted boolean [note: "Đã xoá: cờ xoá mềm"]
+
+  CreatedAt datetime [note: "Thời gian tạo"]
+  UpdatedAt datetime [note: "Thời gian cập nhật"]
+}
+
+Table Media {
+  MediaId UUID [pk]
+  InspectionId UUID [ref: > Inspection.InspectionId]
+  Type Enum('image', 'video')
+  FilePath String
+  CapturedAt timestamp
+  CapturedBy String
+  Note Text
+}
+
