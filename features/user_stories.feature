@@ -1,3 +1,14 @@
+
+
+Feature: Xem thông tin tài sản
+  Người dùng chỉ được phép xem chi tiết tài sản, không được chỉnh sửa trực tiếp trên ứng dụng
+
+  Scenario: Hiển thị thông tin tài sản ở chế độ chỉ đọc
+    Given người dùng đang đăng nhập vào ứng dụng
+    When người dùng chọn một tài sản từ danh sách
+    Then hệ thống hiển thị thông tin tài sản ở chế độ chỉ đọc
+    And không có nút "Chỉnh sửa" hoặc các trường không thể sửa đổi
+    
 # Ghi nhận kết quả kiểm tra tài sản
 Feature: Ghi nhận kiểm tra tài sản
   Là người kiểm tra
