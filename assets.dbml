@@ -17,17 +17,15 @@ Table Asset {
   ChassisNum string [note: "Số khung: Số khung xe\n\nChassis Number: Chassis serial number"]
   EngineNum string [note: "Số máy: Số máy động cơ\n\nEngine Number: Engine serial number"]
   TechnicalFeaturesNote text [note: "Đặc điểm kỹ thuật: Các thông số kỹ thuật bổ sung\n\nTechnical Features: Additional technical specifications"]
-  
   InitialCondition text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or intake"]
-  TechnicalCondition text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
 }
 
 Table Inspection {
   // Relationships
   InspectionId UUID [pk]
   AssignmentId UUID [ref: > Assignment.AssignmentId, note: "Liên kết với phân công (nếu có)"]
-  InspectorId UUID [not null, ref: > User.UserId, note: "Người thực hiện kiểm kê"]
-  TechnicianId UUID [ref: > User.UserId, note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
+  Inspector UUID [not null, ref: > User.Email, note: "Người thực hiện kiểm kê"]
+  Technician UUID [ref: > User.Email, note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
   AssetId UUID [not null, ref: > Asset.AssetId, note: "Tài sản được kiểm kê"]
 
   // Form
@@ -40,6 +38,7 @@ Table Inspection {
   ConditionDescription text [note: "Mô tả hiện trạng tài sản"]
   OperationalFeedback text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
   AdditionalNotes text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
+  TechnicalCondition text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
 
   InspectionType Enum('Định kỳ', 'Bổ sung', 'Khẩn cấp') [note: "Loại kiểm kê, mặc định = Định kỳ"]
   InspectionMethod Enum('Manual')
@@ -75,7 +74,7 @@ Table Media {
   // Metadata
   Type Enum('image', 'video')
   FilePath String
-  CapturedAt timestamp
+  Captured timestamp
   CapturedBy String
   LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
 
@@ -89,8 +88,7 @@ Table Media {
 }
 
 Table User {
-  UserId UUID [pk]
-  Email Varchar
+  Email Varchar [pk]
   Role Enum('Kế hoạch', 'Quản lý', 'Kiểm kê', 'Kỹ thuật')
   Created Timestamp
   Updated Timestamp
@@ -100,7 +98,7 @@ Table User {
 Table Assignment {
   AssignmentId UUID [pk, note: "ID phân công"]
   AssetId UUID [ref: > Asset.AssetId, note: "Tài sản cần kiểm kê"]
-  InspectorId UUID [ref: > User.UserId, note: "Người được phân công"]
+  Inspector UUID [ref: > User.Email, note: "Người được phân công"]
   PlannedDate date [note: "Ngày dự kiến kiểm kê"]
   TimeSlot Enum('Morning', 'Afternoon', 'Full-day') [note: "Khung giờ"]
   Status Enum('Planned', 'In Progress', 'Completed', 'Cancelled') [note: "Trạng thái phân công"]
@@ -114,7 +112,7 @@ Table Error {
   ErrorId UUID [pk]
   EntityType Enum('Inspection', 'Media', 'Assignment')
   EntityId UUID [note: "ID of the failed record"]
-  UserId UUID [ref: > User.UserId]
+  User UUID [ref: > User.Email]
   Timestamp datetime
   Message text
   Code string [note: "Optional structured code"]
