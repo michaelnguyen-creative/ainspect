@@ -20,3 +20,100 @@ Table Asset {
   InitialCondition text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or intake"]
 }
 
+Table Inspection {
+  // Relationships
+  InspectionId UUID [pk]
+  AssignmentId UUID [ref: > Assignment.AssignmentId, note: "Liên kết với phân công (nếu có)"]
+  Inspector UUID [not null, ref: > User.Email, note: "Người thực hiện kiểm kê"]
+  Technician UUID [ref: > User.Email, note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
+  AssetId UUID [not null, ref: > Asset.AssetId, note: "Tài sản được kiểm kê"]
+
+  // Form
+  IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
+  AbsenceReason text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
+
+  UsageStatus Enum('Đang sử dụng', 'Ngừng sử dụng') [note: "Tình trạng sử dụng của tài sản tại ngày kiểm kê"]
+  DeactivationReason text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
+  ConditionRating Int [note: "Điểm đánh giá kiểm kê, từ 1-5 với 5 = Tốt, 4 = Khá, 3 = Trung bình, 2 = Kém, 1 = Hư hỏng"]
+  ConditionDescription text [note: "Mô tả hiện trạng tài sản"]
+  OperationalFeedback text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
+  AdditionalNotes text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
+  TechnicalCondition text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
+
+  InspectionType Enum('Định kỳ', 'Bổ sung', 'Khẩn cấp') [note: "Loại kiểm kê, mặc định = Định kỳ"]
+  InspectionMethod Enum('Manual')
+  Location string [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
+  AssignmentType Enum('Planned', 'Manual') [note: "Phương thức phân công kiểm kê: Được phân công hoặc Tự chọn"]
+  
+  // State
+  InspectionStatus Enum('Assigned', 'In progress', 'Completed', 'Verified', 'Cancelled') [note: "Trạng thái kiểm kê"]
+
+  // Metadata
+  InspectionDate Date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
+  GeoLocation string [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
+ 
+  Created datetime [note: "Thời gian được tạo"]
+  Verified DateTime [note: "Thời gian được xác nhận"]
+  LastModified datetime [note: "Thời gian cập nhật gần nhất"]
+  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+
+  CreatedBy Datetime [note: "Người tạo"]
+  VerifiedBy string [note: "Xác minh bởi: tên hoặc mã người xác minh"]
+  ModifiedBy Datetime [note: "Người cập nhật"]
+  
+  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed')
+  SyncRetryCount Int
+  SyncErrorMessage text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
+}
+
+Table Media {
+  MediaId UUID [pk]
+  InspectionId UUID [not null, ref: > Inspection.InspectionId]
+  AssetId UUID [not null, ref: > Asset.AssetId]
+
+  // Metadata
+  Type Enum('image', 'video')
+  FilePath String
+  Captured timestamp
+  CapturedBy String
+  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+
+  // Người dùng nhập
+  Caption Text
+
+  // Sync
+  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed')
+  SyncRetryCount Int
+  SyncErrorMessage text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
+}
+
+Table User {
+  Email Varchar [pk]
+  Role Enum('Kế hoạch', 'Quản lý', 'Kiểm kê', 'Kỹ thuật')
+  Created Timestamp
+  Updated Timestamp
+  LastLogin Timestamp
+}
+
+Table Assignment {
+  AssignmentId UUID [pk, note: "ID phân công"]
+  AssetId UUID [ref: > Asset.AssetId, note: "Tài sản cần kiểm kê"]
+  Inspector UUID [ref: > User.Email, note: "Người được phân công"]
+  PlannedDate date [note: "Ngày dự kiến kiểm kê"]
+  TimeSlot Enum('Morning', 'Afternoon', 'Full-day') [note: "Khung giờ"]
+  Status Enum('Planned', 'In Progress', 'Completed', 'Cancelled') [note: "Trạng thái phân công"]
+  IsPrimary boolean [note: "Có phải là người kiểm kê chính không"]
+  CreatedBy String [note: "Người tạo"]
+  CreatedAt timestamp [note: "Thời gian tạo"]
+  Notes Text [note: "Ghi chú"]
+}
+
+Table Error {
+  ErrorId UUID [pk]
+  EntityType Enum('Inspection', 'Media', 'Assignment')
+  EntityId UUID [note: "ID of the failed record"]
+  User UUID [ref: > User.Email]
+  Timestamp datetime
+  Message text
+  Code string [note: "Optional structured code"]
+}
