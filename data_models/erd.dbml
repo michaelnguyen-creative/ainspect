@@ -1,119 +1,153 @@
 Table Asset {
-  AssetId string [pk, note: "Mã định danh: Mã định danh duy nhất cho tài sản (do hệ thống tạo)\n\nAsset ID: Unique identifier for the asset (system-generated)"]
-  AssetTag string [not null, note: "Mã tài sản: Mã dễ đọc của tài sản\n\nAsset Tag: Human-readable asset tag"]
-  Description string [note: "Tên tài sản: Mô tả ngắn gọn về tài sản\n\nDescription: Brief description of the asset"]
-  AssetType string [note: "Loại TS: Loại/danh mục tài sản (ví dụ: Xe đầu kéo)\n\nAsset Type: Type/category of the asset (e.g., Xe đầu kéo)"]
-  OwningUnit string [note: "ĐV sở hữu: Đơn vị/bộ phận sở hữu tài sản\n\nOwning Unit: Unit or department that owns the asset"]
-  OperatingUnit string [note: "ĐV khai thác: Đơn vị/bộ phận vận hành tài sản\n\nOperating Unit: Unit or department operating the asset"]
-  LicensePlate string [note: "Biển số: Số biển số chính\n\nLicense Plate: Primary license plate number"]
-  SecondaryLicensePlate string [note: "Biển số 2: Số biển số phụ hoặc thay thế\n\nSecondary License Plate: Secondary or alternate license plate"]
-  AssetNum string [note: "Mã TS: Số tài sản nội bộ trong ERP/Finance\n\nAsset Number: Internal ERP/Finance asset number"]
-  ManufactureYear int [note: "Năm sản xuất: Năm sản xuất tài sản\n\nManufacture Year: Year the asset was manufactured"]
-  CountryOfOrigin string [note: "Nơi sản xuất: Quốc gia sản xuất tài sản\n\nCountry of Origin: Country where the asset was manufactured"]
-  Manufacturer string [note: "Công ty sản xuất: Tên nhà sản xuất\n\nManufacturer: Manufacturer name"]
+  AssetId String [pk, note: "Mã định danh: Mã định danh duy nhất cho tài sản (do hệ thống tạo)\n\nAsset ID: Unique identifier for the asset (system-generated)"]
+  AssetTag String [not null, note: "Mã tài sản: Mã dễ đọc của tài sản\n\nAsset Tag: Human-readable asset tag"]
+  Description String [note: "Tên tài sản: Mô tả ngắn gọn về tài sản\n\nDescription: Brief description of the asset"]
+  AssetType String [note: "Loại TS: Loại/danh mục tài sản (ví dụ: Xe đầu kéo)\n\nAsset Type: Type/category of the asset (e.g., Xe đầu kéo)"]
+  OwningUnit String [note: "ĐV sở hữu: Đơn vị/bộ phận sở hữu tài sản\n\nOwning Unit: Unit or department that owns the asset"]
+  OperatingUnit String [note: "ĐV khai thác: Đơn vị/bộ phận vận hành tài sản\n\nOperating Unit: Unit or department operating the asset"]
+  LicensePlate String [note: "Biển số: Số biển số chính\n\nLicense Plate: Primary license plate number"]
+  SecondaryLicensePlate String [note: "Biển số 2: Số biển số phụ hoặc thay thế\n\nSecondary License Plate: Secondary or alternate license plate"]
+  AssetNum String [note: "Mã TS: Số tài sản nội bộ trong ERP/Finance\n\nAsset Number: Internal ERP/Finance asset number"]
+  ManufactureYear Int [note: "Năm sản xuất: Năm sản xuất tài sản\n\nManufacture Year: Year the asset was manufactured"]
+  CountryOfOrigin String [note: "Nơi sản xuất: Quốc gia sản xuất tài sản\n\nCountry of Origin: Country where the asset was manufactured"]
+  Manufacturer String [note: "Công ty sản xuất: Tên nhà sản xuất\n\nManufacturer: Manufacturer name"]
   LoadCapacity float [note: "Trọng tải: Khả năng tải trọng tối đa (ví dụ: 36.830 tấn)\n\nLoad Capacity: Maximum load capacity in tons (e.g., 36.830)"]
-  Model string [note: "Model: Chi tiết model (ví dụ: 2 cầu, không giường)\n\nModel: Model details (e.g., 2 cầu, không giường)"]
-  StructureType string [note: "Cấu tạo: Cấu hình kết cấu (ví dụ: 2 cầu)\n\nStructure Type: Structural configuration (e.g., 2 cầu)"]
-  ChassisNum string [note: "Số khung: Số khung xe\n\nChassis Number: Chassis serial number"]
-  EngineNum string [note: "Số máy: Số máy động cơ\n\nEngine Number: Engine serial number"]
-  TechnicalFeaturesNote text [note: "Đặc điểm kỹ thuật: Các thông số kỹ thuật bổ sung\n\nTechnical Features: Additional technical specifications"]
-  InitialCondition text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or intake"]
+  Model String [note: "Model: Chi tiết model (ví dụ: 2 cầu, không giường)\n\nModel: Model details (e.g., 2 cầu, không giường)"]
+  StructureType String [note: "Cấu tạo: Cấu hình kết cấu (ví dụ: 2 cầu)\n\nStructure Type: Structural configuration (e.g., 2 cầu)"]
+  ChassisNum String [note: "Số khung: Số khung xe\n\nChassis Number: Chassis serial number"]
+  EngineNum String [note: "Số máy: Số máy động cơ\n\nEngine Number: Engine serial number"]
+  TechnicalFeaturesNote Text [note: "Đặc điểm kỹ thuật: Các thông số kỹ thuật bổ sung\n\nTechnical Features: Additional technical specifications"]
+  InitialCondition Text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or Intake"]
 }
 
-Table Inspection {
-  // Relationships
+// --- Base schema (conceptual only)
+Table InspectionCore {
   InspectionId UUID [pk]
-  AssignmentId UUID [ref: > Assignment.AssignmentId, note: "Liên kết với phân công (nếu có)"]
-  Inspector UUID [not null, ref: > User.Email, note: "Người thực hiện kiểm kê"]
-  Technician UUID [ref: > User.Email, note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
   AssetId UUID [not null, ref: > Asset.AssetId, note: "Tài sản được kiểm kê"]
+  Inspector Text [not null, note: "Người thực hiện kiểm kê"]
+  Technician Text [note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
 
   // Form
   IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
-  AbsenceReason text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
+  AbsenceReason Text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
 
   UsageStatus Enum('Đang sử dụng', 'Ngừng sử dụng') [note: "Tình trạng sử dụng của tài sản tại ngày kiểm kê"]
-  DeactivationReason text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
+  DeactivationReason Text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
   ConditionRating Int [note: "Điểm đánh giá kiểm kê, từ 1-5 với 5 = Tốt, 4 = Khá, 3 = Trung bình, 2 = Kém, 1 = Hư hỏng"]
-  ConditionDescription text [note: "Mô tả hiện trạng tài sản"]
-  OperationalFeedback text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
-  AdditionalNotes text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
-  TechnicalCondition text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
+  ConditionDescription Text [note: "Mô tả hiện trạng tài sản"]
+  OperationalFeedback Text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
+  AdditionalNotes Text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
+  TechnicalCondition Text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
 
   InspectionType Enum('Định kỳ', 'Bổ sung', 'Khẩn cấp') [note: "Loại kiểm kê, mặc định = Định kỳ"]
   InspectionMethod Enum('Manual')
-  Location string [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
+  Location String [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
   AssignmentType Enum('Planned', 'Manual') [note: "Phương thức phân công kiểm kê: Được phân công hoặc Tự chọn"]
   
   // State
-  InspectionStatus Enum('Assigned', 'In progress', 'Completed', 'Verified', 'Cancelled') [note: "Trạng thái kiểm kê"]
+  InspectionStatus Enum('In progress', 'Completed', 'Verified', 'Cancelled') [note: "Trạng thái kiểm kê"]
 
   // Metadata
   InspectionDate Date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
-  GeoLocation string [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
- 
-  Created datetime [note: "Thời gian được tạo"]
-  Verified DateTime [note: "Thời gian được xác nhận"]
-  LastModified datetime [note: "Thời gian cập nhật gần nhất"]
-  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+  GeoLocation String [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
+}
 
-  CreatedBy Datetime [note: "Người tạo"]
-  VerifiedBy string [note: "Xác minh bởi: tên hoặc mã người xác minh"]
-  ModifiedBy Datetime [note: "Người cập nhật"]
+Table LocalInspection {
+  Id UUID [pk, note: "Local InspectionId created by app instances"]
+  // Inherited properties
+  InspectionId UUID [not null, ref: > InspectionCore.InspectionId, note: "Remote InspectionId"]
+  AssetId UUID [not null, ref: > InspectionCore.AssetId, note: "Remote InspectionId"]
+  Inspector Text [not null, ref: > InspectionCore.Inspector]
+  Technician Text [ref: > InspectionCore.Inspector]
+  // ... Rest of fields in InspectionCore
+
+  // Tracking fields
+  Recorded Timestamp [note: "Thời gian record được tạo ra"]
+  RecordedBy Email [note: "Email user đang sử dụng app (đăng nhập)"]
+
+  // Sync metadata
+  SyncStatus Enum('Pending', 'Synced', 'Failed', 'Conflict')
+  LastModified Datetime [note: "Thời gian cập nhật gần nhất"]
+  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
   
-  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed')
   SyncRetryCount Int
-  SyncErrorMessage text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
+  SyncErrorMessage Text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
+  ConflictDetected boolean [default: false, note: "Flag if conflict was detected during sync"]
+  ConflictNotes Text [note: "Optional manual review notes if conflict occurred"]
 }
 
-Table Media {
+// **RemoteInspection** (canonical system of record)
+Table RemoteInspection {
+  Id Int [pk, note: "SharePoint list item id"]
+  // Inherited properties
+  InspectionId UUID [not null, ref: > InspectionCore.InspectionId]
+  AssetId UUID [not null, ref: > InspectionCore.AssetId]
+  Inspector Text [not null, ref: > InspectionCore.Inspector]
+  Technician Text [ref: > InspectionCore.Inspector]
+  // ... Rest of fields in InspectionCore
+  
+  // Tracking fields
+  Recorded Timestamp [note: "Thời gian record được tạo ra"]
+  RecordedBy Email [note: "Email user tạo ra record khi sử dụng app (đăng nhập)"]
+
+  // Sync metadata
+  Modified Datetime [note: "Server last modified time (SharePoint Modified)"]
+}
+
+
+Table MediaCore {
   MediaId UUID [pk]
-  InspectionId UUID [not null, ref: > Inspection.InspectionId]
-  AssetId UUID [not null, ref: > Asset.AssetId]
+  InspectionId UUID [not null, ref: > InspectionCore.InspectionId, note: "Remote InspectionId"]
+  AssetId UUID [not null, ref: > InspectionCore.AssetId, note: "Remote InspectionId"]
 
-  // Metadata
-  Type Enum('image', 'video')
-  FilePath String
-  Captured timestamp
-  CapturedBy String
-  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+  // Core Metadata
+  Type Enum('image', 'video') [note: "Loại media: ảnh hoặc video"]
+  Caption Text [note: "Chú thích do người dùng nhập"]
+  Captured timestamp [note: "Thời gian chụp"]
+  CapturedBy String [note: "Người chụp (Email hoặc tên)"]
+}
 
-  // Người dùng nhập
-  Caption Text
+Table LocalMedia {
+  Id UUID [pk]
+  InspectionId UUID [not null, ref: > MediaCore.InspectionId, note: "Remote InspectionId"]
+  AssetId UUID [not null, ref: > MediaCore.AssetId, note: "Remote InspectionId"]
+  // ...rest of fields in MediaCore
 
-  // Sync
-  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed')
+  // Local Metadata (PowerApps)
+  FilePath String [note: "Đường dẫn nội bộ trên thiết bị"]
+  FileContent blob [note: "Base64 hoặc binary content - chỉ local, không đồng bộ"]
+  LocalSaved boolean [note: "Đã lưu cục bộ bằng SaveData() hay chưa"]
+  LocalCollectionId String [note: "ID duy nhất trong bộ nhớ tạm của PowerApps"]
+
+  // Sync Info
+  SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed') [note: "Trạng thái đồng bộ"]
   SyncRetryCount Int
-  SyncErrorMessage text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
+  SyncErrorMessage Text [note: "Thông báo lỗi nếu SyncStatus = Failed"]
+  LastSynced Datetime
+  ConflictDetected boolean [default: false, note: "Flag if conflict was detected during sync"]
+  ConflictNotes Text [note: "Optional manual review notes if conflict occurred"]
 }
 
-Table User {
-  Email Varchar [pk]
-  Role Enum('Kế hoạch', 'Quản lý', 'Kiểm kê', 'Kỹ thuật')
-  Created Timestamp
-  Updated Timestamp
-  LastLogin Timestamp
+Table RemoteMedia {
+  Id Int [pk, note: "ID mục trong danh sách SharePoint"]
+  InspectionId UUID [not null, ref: > MediaCore.InspectionId, note: "Remote InspectionId"]
+  AssetId UUID [not null, ref: > MediaCore.AssetId, note: "Remote InspectionId"]
+  // ...rest of fields in MediaCore
+
+  // Remote Metadata (SharePoint)
+  FileName String [note: "Tên tệp đính kèm trên SharePoint"]
+  FileContent Base64 [note: "Nội dung hình ảnh in binaries"]
+  RemoteUrl String [note: "Đường dẫn đến tệp sau khi đồng bộ"]
 }
 
-Table Assignment {
-  AssignmentId UUID [pk, note: "ID phân công"]
-  AssetId UUID [ref: > Asset.AssetId, note: "Tài sản cần kiểm kê"]
-  Inspector UUID [ref: > User.Email, note: "Người được phân công"]
-  PlannedDate date [note: "Ngày dự kiến kiểm kê"]
-  TimeSlot Enum('Morning', 'Afternoon', 'Full-day') [note: "Khung giờ"]
-  Status Enum('Planned', 'In Progress', 'Completed', 'Cancelled') [note: "Trạng thái phân công"]
-  IsPrimary boolean [note: "Có phải là người kiểm kê chính không"]
-  CreatedBy String [note: "Người tạo"]
-  CreatedAt timestamp [note: "Thời gian tạo"]
-  Notes Text [note: "Ghi chú"]
-}
-
-Table Error {
-  ErrorId UUID [pk]
-  EntityType Enum('Inspection', 'Media', 'Assignment')
-  EntityId UUID [note: "ID of the failed record"]
-  User UUID [ref: > User.Email]
+Table MediaSyncLog {
+  LogId UUID [pk]
+  MediaId UUID [ref: > MediaCore.MediaId]
+  InspectionId UUID [ref: > InspectionCore.InspectionId]
+  UserEmail String
   Timestamp datetime
-  Message text
-  Code string [note: "Optional structured code"]
+  Action Enum('Upload', 'Retry', 'Failure', 'Success')
+  Message Text
+  DeviceId String
+  AppVersion String
 }
