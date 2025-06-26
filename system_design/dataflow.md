@@ -92,3 +92,12 @@ Remote (SharePoint)
 Local (Read-only, offline cache)
    ↓   (user creates new)
 Captured (User submissions → queued for sync)
+
+🧠 Naming Convention (Recommended)
+Collection	Type	Notes
+RemoteAssets	SharePoint	Loaded on AppStart if online
+LocalAssets	Cached	Copy of RemoteAssets
+RemoteInspections	SharePoint	Optional — read-only reference
+LocalInspections	Cached	For offline read/reference
+colLocalInspections	Captured	New inspections only
+colLocalMedia	Captured	Media for captured inspections
