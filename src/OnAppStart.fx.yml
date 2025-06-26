@@ -1,0 +1,122 @@
+ClearCollect(
+    colMergedInspections,
+    Table(
+        {
+            InspectionId: Blank(),
+            AssetId: Blank(),
+            Inspector: Blank(),
+            InspectionDate: Blank(),
+            Status: Blank(), // From local, hardcoded to "Synced" for remote
+            Source: Blank(), // Local or Remote
+            SyncStatus: Blank()
+        }
+    )
+);
+
+// On App Start or Screen OnVisible
+Clear(colLocalInspections);
+ClearCollect(colLocalMedia, []);
+Set(LoggedInUser, User());
+// App.OnStart
+LoadData(colLocalMedia, "LocalMedia", true);
+
+ClearCollect(colLocalMedia,
+    {
+        FileName: "",
+        FileContent: Blank(),
+        InspectionId: "",
+        CapturedBy: "",
+        Timestamp: Now(),
+        SyncStatus: "Pending",
+        SyncRetryCount: 0,
+        SyncErrorMessage: "",
+        LastSynced: Now()  // Correct type established here
+    }
+);
+Clear(colLocalMedia); // Empty it after defining structure
+
+// Try to load saved local inspections from storage
+If(
+    !IsEmpty(LoadData(colLocalInspections, "LocalInspections", true)),
+    Set(colLocalInspections, LoadData(colLocalInspections, "LocalInspections",true)),
+    // Initialize as empty if not yet stored
+    ClearCollect(
+        colLocalInspections,
+        {
+            InspectionId: "",
+            AssetId: "",
+            Inspector: "",
+            Technician: "",
+            InspectedSite: "",
+            InspectionDate: Blank(),
+            Inspected: "",
+            Recorded: Blank(),
+            RecordedBy: "",
+            SyncStatus: "Pending",
+            LastModified: Blank(),
+            LastSynced: Blank(),
+            MediaRefs: [] // Empty array for linked MediaId references
+        }
+    )
+);
+
+
+// 1️⃣ Sync data from online (if connected) or load from local (if offline)
+If(Connection.Connected,
+    // Load Assets from Excel (e.g. OneDrive or SharePoint)
+    ClearCollect(LocalAssets, Assets);
+    SaveData(LocalAssets, "LocalAssets");
+
+    // Load Inspections from SharePoint
+    ClearCollect(LocalInspections, Inspections);
+    SaveData(LocalInspections, "LocalInspections");
+,
+    // Offline fallback
+    LoadData(LocalAssets, "LocalAssets", true);
+    LoadData(LocalInspections, "LocalInspections", true)
+);
+
+// 2️⃣ Init camera index (for photo capture feature)
+Set(varCameraIndex, 0);
+
+// 3️⃣ Build distinct list of Units from OwningUnit & OperatingUnit
+
+// Step 1: Flatten Owning + Operating units into a single column collection
+ClearCollect(TempUnits, {}); // Reset temp
+
+ForAll(
+    LocalAssets,
+    Collect(TempUnits,
+        { Unit: OwningUnit },
+        { Unit: OperatingUnit }
+    )
+);
+
+// Step 2: Distinct values from both fields
+ClearCollect(
+    CombinedUnits,
+    Distinct(TempUnits, Unit)
+);
+
+// 4️⃣ Load or initialize session metadata (date, user, unit info)
+// Attempt to load saved metadata
+LoadData(LocalInspectionMetadata, "LocalInspectionMetadata", true);
+
+// Check if anything was loaded
+If(
+    !IsEmpty(LocalInspectionMetadata),
+    
+    // ✅ Loaded successfully: refresh today's date
+    Patch(LocalInspectionMetadata, First(LocalInspectionMetadata), { InspectionDate: Today() }),
+    
+    // ❌ Load failed or first run: initialize
+    ClearCollect(
+        LocalInspectionMetadata,
+        {
+            InspectionDate: Today(),
+            Inspector: "",
+            Technician: "",
+            InspectedSite: ""
+        }
+    )
+);

@@ -1,0 +1,33 @@
+AddColumns(
+    Filter(colLocalInspections, AssetId = CurrentAssetId),
+    SourceType, "Local"
+)
+
+AddColumns(
+    Filter(
+        Inspections,
+        AssetId.Value = CurrentAssetId &&
+        IsBlank(
+            LookUp(
+                colLocalInspections,
+                InspectionId = Inspections[@InspectionId]
+            )
+        )
+    ),
+    SourceType, "Remote"
+)
+
+
+--
+// 3. Add only remote inspections that are NOT already in local
+Collect(
+    colMergedInspections,
+    Filter(
+        Inspections,
+        AssetId.Value = CurrentAssetId &&
+        !IsBlank(InspectionId) &&
+        IsBlank(
+            LookUp(colLocalInspections, InspectionId = Inspections[@InspectionId])
+        )
+    )
+);

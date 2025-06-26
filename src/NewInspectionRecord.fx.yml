@@ -1,0 +1,43 @@
+Set(
+    newInspectionRecord,
+    {
+        Id: GUID(),
+        InspectionId: DataCardValue2.Text,
+        AssetId: DataCardValue44.Selected.Value,
+
+        Inspector: DataCardValue1.Text,
+        Technician: DataCardValue31.Text,
+        InspectedSite: DataCardValue37.Selected.Value,
+        InspectionDate: DateValue1.SelectedDate,
+
+        IsPresent: Toggle1.Value,
+        AbsenceReason: DataCardValue24.Text,
+        UsageStatus: DataCardValue34.Text,
+        DeactivationReason: DataCardValue29.Text,
+        ConditionRating: DataCardValue3.Selected.Value,
+        ConditionDescription: DataCardValue28.Text,
+        OperationalFeedback: DataCardValue6.Text,
+        AdditionalNotes: DataCardValue26.Text,
+        TechnicalCondition: DataCardValue35.Text,
+
+        InspectionType: DataCardValue54.Text,
+        InspectionMethod: DataCardValue33.Text,
+        LocationOfInpsection: DataCardValue36.Text,
+        InspectionStatus: "In Progress",
+
+        GeoLocation: DataCardValue30.Text,
+        Inspected: DataCardValue32.Text,
+
+        // Local inspection record
+        Recorded: Now(),
+        RecordedBy: LoggedInUser.Email,
+        SyncStatus: "Pending",
+        LastModified: Now(),
+        LastSynced: "",
+        SyncRetryCount: 0,
+        SyncErrorMessage: "",
+        ConflictDetected: false,
+        ConflictNotes: ""
+    }
+);
+Collect(colLocalInspections, newInspectionRecord);
