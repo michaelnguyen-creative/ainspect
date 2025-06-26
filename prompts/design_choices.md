@@ -23,6 +23,6 @@ Not collaborative (users can’t see each other’s edits).
 
 Verdict:
 ✅ Ideal for asset audits, inspections, surveys, data collection — where data is append-only.
-
-
 ```
+
+=> the app as field capture tool & another model-driven app as a portal/command center
