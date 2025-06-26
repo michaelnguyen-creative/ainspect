@@ -1,3 +1,131 @@
+
+
+=====
+// --- 🧹 0. Clean state (dev/debug only — optional) ---
+Clear(colLocalInspections);
+Clear(colLocalMedia);
+Clear(colMergedInspections);
+
+// --- 1. Initialize camera index (optional) ---
+Set(varCameraIndex, 0);
+
+// --- 📦 2. Load or Init Local Media ---
+LoadData(colLocalMedia, "LocalMedia", true);
+If(
+    IsBlank(colLocalMedia),
+    ClearCollect(
+        colLocalMedia,
+        {
+            Id: GUID(),
+            FileName: "",
+            FileContent: Blank(),
+            InspectionId: "",
+            AssetId: "",
+            Type: "image",
+            Caption: "",
+            Captured: Now(),
+            CapturedBy: "",
+            FilePath: "",
+            LocalSaved: false,
+            LocalCollectionId: "",
+            SyncStatus: "Pending",
+            SyncRetryCount: 0,
+            SyncErrorMessage: "",
+            LastSynced: ""
+        }
+    );
+    Clear(colLocalMedia)
+);
+
+// --- 📋 3. Load or Init Local Inspections ---
+LoadData(colLocalInspections, "LocalInspections", true);
+If(
+    IsBlank(colLocalInspections),
+    ClearCollect(
+        colLocalInspections,
+        {
+            Id: GUID(),
+            InspectionId: "",
+            AssetId: "",
+            Inspector: "",
+            Technician: "",
+            InspectedSite: "",
+            InspectionDate: Blank(),
+            Inspected: "",
+            Recorded: Blank(),
+            RecordedBy: "",
+            SyncStatus: "Pending",
+            LastModified: Blank(),
+            LastSynced: Blank(),
+            SyncRetryCount: 0,
+            SyncErrorMessage: "",
+            ConflictDetected: false,
+            ConflictNotes: ""
+        }
+    );
+    Clear(colLocalInspections)
+);
+
+// --- 🌐 4. Load online data (Assets, Remote Inspections) or fallback ---
+If(Connection.Connected,
+    ClearCollect(LocalAssets, Assets);
+    SaveData(LocalAssets, "LocalAssets");
+
+    ClearCollect(LocalInspections, Inspections); // Remote Inspections
+    SaveData(LocalInspections, "LocalInspections")
+,
+    LoadData(LocalAssets, "LocalAssets", true);
+    LoadData(LocalInspections, "LocalInspections", true)
+);
+
+// --- 📷 5. Init Camera Index (first lens) ---
+Set(varCameraIndex, 0);
+
+// --- 🧾 6. Initialize or Load Metadata (Inspector, Site, etc.) ---
+LoadData(LocalInspectionMetadata, "LocalInspectionMetadata", true);
+If(
+    IsBlank(LocalInspectionMetadata),
+    ClearCollect(
+        LocalInspectionMetadata,
+        {
+            InspectionDate: Today(),
+            Inspector: "",
+            Technician: "",
+            InspectedSite: ""
+        }
+    ),
+    Patch(LocalInspectionMetadata, First(LocalInspectionMetadata), { InspectionDate: Today() })
+);
+
+// --- 🏷️ 7. Build Combined Units (Owning + Operating) ---
+ClearCollect(TempUnits, {});
+ForAll(
+    LocalAssets,
+    Collect(TempUnits,
+        { Unit: OwningUnit },
+        { Unit: OperatingUnit }
+    )
+);
+ClearCollect(CombinedUnits, Distinct(TempUnits, Unit));
+
+// --- 🔄 8. Init colMergedInspections structure ---
+ClearCollect(
+    colMergedInspections,
+    Table(
+        {
+            InspectionId: Blank(),
+            AssetId: Blank(),
+            Inspector: Blank(),
+            InspectionDate: Blank(),
+            Status: Blank(),
+            Source: Blank(),
+            SyncStatus: Blank()
+        }
+    )
+);
+
+=====
+
 ClearCollect(
     colMergedInspections,
     Table(
