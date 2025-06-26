@@ -1,0 +1,25 @@
+// Attempt to load metadata and store success flag
+Set(varNewInspectionId, GUID());
+
+// If loading failed or the collection is empty, initialize it
+If(
+    IsEmpty(LocalInspectionMetadata),
+    ClearCollect(
+        LocalInspectionMetadata,
+        {
+            InspectionDate: Today(),
+            Inspector: "",
+            Technician: "",
+            InspectedSite: ""
+        }
+    )
+);
+
+// Extract values to variables
+Concurrent(
+    Set(varInspector, First(LocalInspectionMetadata).Inspector),
+    Set(varTechnician, First(LocalInspectionMetadata).Technician),
+    Set(varInspectedSite, First(LocalInspectionMetadata).InspectedSite)
+)
+
+-
