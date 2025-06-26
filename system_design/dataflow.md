@@ -79,3 +79,16 @@ Use `SaveData()` / `LoadData()` to persist `Assets` and `LocalInspections`, `Loc
 
 You said:
 I think it might even make more sense to split the app data to remote & local & captured versions (local = downloaded remote + captured)
+
+✅ New Conceptual Model: Split Data into 3 Layers
+Layer	Description	PowerApps Collection
+Remote	Online data pulled from SharePoint (read-only)	RemoteAssets, RemoteInspections
+Local	Cached copy of remote data for offline usage	LocalAssets, LocalInspections
+Captured	New, user-submitted (but not yet synced) records	colLocalInspections, colLocalMedia
+
+📦 App Structure
+Remote (SharePoint)
+   ↓   (on AppStart if connected)
+Local (Read-only, offline cache)
+   ↓   (user creates new)
+Captured (User submissions → queued for sync)
