@@ -1,0 +1,44 @@
+ClearCollect(
+    colMergedInspections,
+
+    // 1. Local inspections for this asset
+    ForAll(
+        Filter(colLocalInspections, AssetId = CurrentAssetId),
+        {
+            InspectionId: InspectionId,
+            AssetId: AssetId,
+            Inspector: Inspector,
+            Inspected: Inspected,
+            Status: InspectionStatus,
+            SyncStatus: SyncStatus,
+            Source: "Local"
+        }
+    )
+);
+
+Collect(
+    colMergedInspections,
+
+    // 2. Remote inspections for this asset not already in local
+    ForAll(
+        Filter(
+            Inspections,
+            AssetId.Value = CurrentAssetId &&
+            IsBlank(
+                LookUp(
+                    colLocalInspections,
+                    InspectionId = ThisRecord.InspectionId
+                )
+            )
+        ),
+        {
+            InspectionId: InspectionId,
+            AssetId: AssetId.Value,
+            Inspector: Inspector,
+            Inspected: Inspected,
+            Status: InspectionStatus,
+            SyncStatus: "Synced",
+            Source: "Remote"
+        }
+    )
+);
