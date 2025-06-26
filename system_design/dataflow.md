@@ -75,3 +75,7 @@ Use `SaveData()` / `LoadData()` to persist `Assets` and `LocalInspections`, `Loc
 | **Media handling**      | Captured locally, attached on sync |
 | **Portal oversight**    | Via command center (not mobile)    |
 
+===
+
+You said:
+I think it might even make more sense to split the app data to remote & local & captured versions (local = downloaded remote + captured)
