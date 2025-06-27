@@ -1,4 +1,161 @@
 
+===6/27/25 3:06pm
+// --- 🧪 0. Set Environment Mode ---
+Set(varIsDev, false); // ⬅️ Set this to false for production
+
+// --- 🧹 1. Clear State (for dev only) ---
+If(
+    varIsDev,
+    Clear(colLocalInspections);
+    Clear(colLocalMedia);
+    Clear(colMergedInspections)
+);
+
+// --- 📸 2. Init Variables ---
+Set(varCameraIndex, 0);
+
+// --- 📂 3. Load or Initialize Local Media ---
+If(!varIsDev,
+    LoadData(colLocalMedia, "LocalMedia", true)
+);
+If(
+    varIsDev || IsEmpty(colLocalMedia),
+    ClearCollect(
+        colLocalMedia,
+        {
+            Id: GUID(),
+            FileName: "",
+            FileContent: Blank(),
+            InspectionId: "",
+            AssetId: "",
+            Type: "image",
+            Caption: "",
+            Captured: Now(),
+            CapturedBy: "",
+            FilePath: "",
+            LocalSaved: false,
+            LocalCollectionId: "",
+            SyncStatus: "Pending",
+            SyncRetryCount: 0,
+            SyncErrorMessage: "",
+            LastSynced: ""
+        }
+    );
+    Clear(colLocalMedia)
+);
+
+// --- 📋 4. Load or Initialize Local Inspections ---
+If(!varIsDev,
+    LoadData(colLocalInspections, "LocalInspections", true)
+);
+If(
+    varIsDev || IsEmpty(colLocalInspections),
+    ClearCollect(
+        colLocalInspections,
+        {
+            Id: GUID(),
+            InspectionId: "",
+            AssetId: "",
+            Inspector: "",
+            Technician: "",
+            InspectedSite: "",
+            InspectionDate: Blank(),
+            Inspected: "",
+            Recorded: Blank(),
+            RecordedBy: "",
+            SyncStatus: "Pending",
+            LastModified: Blank(),
+            LastSynced: Blank(),
+            SyncRetryCount: 0,
+            SyncErrorMessage: "",
+            ConflictDetected: false,
+            ConflictNotes: ""
+        }
+    );
+    Clear(colLocalInspections)
+);
+
+// --- 🌐 5. Load Online Data (Assets & Remote Inspections) ---
+If(
+    Connection.Connected,
+    ClearCollect(LocalAssets, Assets);
+    ClearCollect(LocalInspections, Inspections);
+    
+    If(!varIsDev,
+        SaveData(LocalAssets, "LocalAssets");
+        SaveData(LocalInspections, "LocalInspections")
+    )
+,
+    If(!varIsDev,
+        LoadData(LocalAssets, "LocalAssets", true);
+        LoadData(LocalInspections, "LocalInspections", true)
+    )
+);
+
+// --- 🧾 6. Load or Initialize Metadata ---
+// Load metadata from local storage
+If(
+    !varIsDev,
+    LoadData(LocalInspectionMetadata, "LocalInspectionMetadata", true)
+);
+
+// If no metadata exists → initialize with defaults
+If(
+    varIsDev || IsEmpty(LocalInspectionMetadata),
+    ClearCollect(
+        LocalInspectionMetadata,
+        {
+            InspectionDate: Today(),
+            Inspector: LoggedInUser.FullName,
+            Technician: "",
+            InspectedSite: ""
+        }
+    );
+    SaveData(LocalInspectionMetadata, "LocalInspectionMetadata")
+);
+
+// Populate app variables from metadata
+Set(varInspector, First(LocalInspectionMetadata).Inspector);
+Set(varTechnician, First(LocalInspectionMetadata).Technician);
+Set(varInspectedSite, First(LocalInspectionMetadata).InspectedSite);
+Set(varInspectionDate, First(LocalInspectionMetadata).InspectionDate);
+
+// --- 🏷️ 7. Build Combined Unit List ---
+ClearCollect(TempUnits, {});
+ForAll(
+    LocalAssets,
+    Collect(TempUnits,
+        { Unit: OwningUnit },
+        { Unit: OperatingUnit }
+    )
+);
+ClearCollect(CombinedUnits, Distinct(TempUnits, Unit));
+
+// --- 🧪 8. Initialize Merged Inspection Structure ---
+ClearCollect(
+    colMergedInspections,
+    Table(
+        {
+            InspectionId: Blank(),
+            AssetId: Blank(),
+            Inspector: Blank(),
+            InspectionDate: Blank(),
+            Status: Blank(),
+            Source: Blank(),
+            SyncStatus: Blank()
+        }
+    )
+);
+
+// ***CapturedInspections init***
+// --- 📂 9. Load or Initialize Captured Inspections ---
+If(
+    !varIsDev,
+    LoadData(CapturedInspections, "CapturedInspections", true)
+);
+
+
+// If online → trigger sync for pending captured inspection records
 
 =====
 // --- 🧹 0. Clean state (dev/debug only — optional) ---
