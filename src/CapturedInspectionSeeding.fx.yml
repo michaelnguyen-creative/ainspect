@@ -1,0 +1,46 @@
+// If dev mode OR first-time / empty → seed with dummy data
+If(
+    varIsDev || IsEmpty(CapturedInspections),
+    ClearCollect(
+    CapturedInspections,
+    Table(
+        {
+            // Take values from First(LocalInspections)
+            InspectionId: First(LocalInspections).InspectionId,
+            AssetId: First(LocalInspections).AssetId,
+            Inspector: First(LocalInspections).Inspector,
+            Technician: First(LocalInspections).Technician,
+            InspectedSite: First(LocalInspections).InspectedSite,
+            InspectionDate: First(LocalInspections).InspectionDate,
+            IsPresent: First(LocalInspections).IsPresent,
+            AbsenceReason: First(LocalInspections).AbsenceReason,
+            UsageStatus: First(LocalInspections).UsageStatus,
+            DeactivationReason: First(LocalInspections).DeactivationReason,
+            ConditionRating: First(LocalInspections).ConditionRating,
+            ConditionDescription: First(LocalInspections).ConditionDescription,
+            OperationalFeedback: First(LocalInspections).OperationalFeedback,
+            AdditionalNotes: First(LocalInspections).AdditionalNotes,
+            TechnicalCondition: First(LocalInspections).TechnicalCondition,
+            InspectionType: First(LocalInspections).InspectionType,
+            InspectionMethod: First(LocalInspections).InspectionMethod,
+            LocationOfInspection: First(LocalInspections).LocationOfInspection,
+            GeoLocation: First(LocalInspections).GeoLocation,
+            Inspected: First(LocalInspections).Inspected,
+
+            // Add your local-only fields
+            Id: GUID(),
+            Recorded: Now(),
+            RecordedBy: LoggedInUser.Email,
+            SyncStatus: "Pending",
+            SyncRetryCount: 0,
+            SyncErrorMessage: "",
+            LastSynced: Blank(),
+            ConflictDetected: false,
+            ConflictNotes: "",
+            LastModified: Now(),
+            DeviceInfo: ""
+        }
+    )
+);
+    SaveData(CapturedInspections, "CapturedInspections")
+);
