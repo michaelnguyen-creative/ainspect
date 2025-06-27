@@ -1,0 +1,24 @@
+// Step 1: Generate a new InspectionId
+Set(varNewInspectionId, GUID());
+
+// Step 2: Initialize metadata (if not already set)
+If(
+    IsEmpty(LocalInspectionMetadata),
+    ClearCollect(
+        LocalInspectionMetadata,
+        {
+            Inspector: varInspector,
+            Technician: varTechnician,
+            InspectedSite: varInspectedSite, // location or site name
+            InspectionDate: varInspectionDate
+        }
+    )
+);
+
+// Step 3: Optional — bind values to screen variables (if needed)
+Concurrent(
+    Set(varInspector, First(LocalInspectionMetadata).Inspector),
+    Set(varTechnician, First(LocalInspectionMetadata).Technician),
+    Set(varInspectedSite, First(LocalInspectionMetadata).InspectedSite),
+    Set(varInspectionDate, First(LocalInspectionMetadata).InspectionDate)
+);
