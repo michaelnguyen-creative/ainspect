@@ -1,3 +1,45 @@
+
+=====jun 28 2025, 1:09pm
+
+// Merge both transformed collections at once
+ClearCollect(
+    LocalInspections,
+    Ungroup(
+        Table(
+            {
+                Group: AddColumns(
+                    ShowColumns(
+                        DownloadedInspections,
+                        InspectionId,
+                        AssetId,
+                        Inspector,
+                        InspectionDate
+                    ),
+                    Source, "Remote",
+                    SyncStatus, "Synced"
+                )
+            },
+            {
+                Group: AddColumns(
+                    ShowColumns(
+                        CapturedInspections,
+                        InspectionId,
+                        AssetId,
+                        Inspector,
+                        InspectionDate,
+                        Inspected,
+                        SyncStatus
+                    ),
+                    Source, "Local"
+                )
+            }
+        ),
+        Group
+    )
+);
+
+=====
+
 ClearCollect(
     colMergedInspections,
 
