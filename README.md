@@ -9,6 +9,6 @@
 
 | Collection         | ...      | ...                                    | ...                                   |
 | ------------------ | ------------------ | ----------------------------------------- | ---------------------------------------------- |
-| Captured           | ...  | Captured data, waiting for sync           | ...  |
-| Downloaded         | ...  | Synced data downloaded for offline access | ...  |
-| Local              | ...  | Display/read only                         | ...  |
+| Captured           | Captured = Save(Record)  | Captured data, waiting for sync           | ...  |
+| Downloaded         | Downloaded = Download(Remote)  | Synced data downloaded for offline access | ...  |
+| Local              | Local = Captured + Downloaded  | Display/read only                         | ...  |
