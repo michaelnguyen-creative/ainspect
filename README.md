@@ -1,8 +1,10 @@
 # Documentation
 
 Local Inspections & Local Assets for Display only
+- Limited set of properties => only what is required for the feature
 
 canonical data source = Captured & Downloaded
+- Full properties
 
 # Mô hình dữ liệu
 
