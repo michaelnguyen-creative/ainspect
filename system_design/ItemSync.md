@@ -1,4 +1,30 @@
 
+
+<===
+ok, after syncing, we should persist all updates to local device storage?
+---
+✅ Michael — you’re spot on! Yes, **persisting updates to local device storage after syncing is the right move** to keep your offline-first app reliable and consistent across sessions.
+
+---
+
+## 💡 **Why persist after sync?**
+
+After your `Patch` and `ForAll` updates:
+
+* Your collections (`CapturedInspections`, `CapturedMedia`, `LocalInspections`) are updated **in memory**.
+* But unless you run `SaveData`, all these changes will be lost if the app closes/crashes.
+
+👉 **Persisting at the end of sync ensures:**
+
+* The local copy stays in sync with SharePoint.
+* Users see up-to-date statuses (e.g. no more "Pending" records that already synced).
+---
+
+⚠ **Recommendation:**
+If `LocalAssets` is part of your design (and gets updated during sync), add `SaveData(LocalAssets, "LocalAssets")` too.
+
+
+===>
 <===
 sync process
 - upload inspectionwithmedia to sharepoint (this should also trigger updating lastsync column in Inspection sharepoint list)
