@@ -57,17 +57,31 @@ DataSourceInfo([@Assets],DataSourceInfo.DisplayName,StructureType)
 ### Inspections
 
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,InspectionDate)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,InspectedSite)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,LocationOfInspection)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,Inspector)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,Technician)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,IsPresent)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,AbsenceReason)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,UsageStatus)
+
+DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,DeactivationReason)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,OperationalFeedback)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,AdditionalNotes)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,ConditionDescription)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,ConditionRating)
+
 DataSourceInfo([@CapturedInspections],DataSourceInfo.DisplayName,TechnicalCondition)
 
 DataSourceInfo([@Assets],DataSourceInfo.DisplayName,)
