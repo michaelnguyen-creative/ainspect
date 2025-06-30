@@ -1,3 +1,9 @@
+# Documentation
+
+Local Inspections & Local Assets for Display only
+
+canonical data source = Captured & Downloaded
+
 # Mô hình dữ liệu
 
 | Bảng               | Thời điểm tạo      | Ai tạo               | Dữ liệu chứa                                   |
