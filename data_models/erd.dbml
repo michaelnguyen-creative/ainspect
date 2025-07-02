@@ -18,6 +18,9 @@ Table Asset {
   EngineNum String [note: "Số máy: Số máy động cơ\n\nEngine Number: Engine serial number"]
   TechnicalFeaturesNote Text [note: "Đặc điểm kỹ thuật: Các thông số kỹ thuật bổ sung\n\nTechnical Features: Additional technical specifications"]
   InitialCondition Text [note: "Tình trạng ban đầu: Tình trạng tại thời điểm kiểm tra hoặc nhập kho\n\nInitial Condition: Condition at the time of inspection or Intake"]
+
+  // Inspection refs
+  LastInspected Datetime [note: "Thời gian kiểm kê gần nhất"]
 }
 
 // --- Base schema (conceptual only)
@@ -41,19 +44,17 @@ Table InspectionCore {
 
   InspectionType Enum('Định kỳ', 'Bổ sung', 'Khẩn cấp') [note: "Loại kiểm kê, mặc định = Định kỳ"]
   InspectionMethod Enum('Manual')
-  Location String [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
-  AssignmentType Enum('Planned', 'Manual') [note: "Phương thức phân công kiểm kê: Được phân công hoặc Tự chọn"]
+  LocationOfInspection String [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
   
   // State
-  InspectionStatus Enum('In progress', 'Completed', 'Verified', 'Cancelled') [note: "Trạng thái kiểm kê"]
 
   // Metadata
   InspectionDate Date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
   GeoLocation String [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
 }
 
-Table LocalInspection {
-  Id UUID [pk, note: "Local InspectionId created by app instances"]
+Table CapturedInspection {
+  Id UUID [pk, note: "Captured InspectionId created by app instances"]
   // Inherited properties
   InspectionId UUID [not null, ref: > InspectionCore.InspectionId, note: "Remote InspectionId"]
   AssetId UUID [not null, ref: > InspectionCore.AssetId, note: "Remote InspectionId"]
@@ -65,10 +66,9 @@ Table LocalInspection {
   Recorded Timestamp [note: "Thời gian record được tạo ra"]
   RecordedBy Email [note: "Email user đang sử dụng app (đăng nhập)"]
 
-  // Sync metadata
+  // State tracking
   SyncStatus Enum('Pending', 'Synced', 'Failed', 'Conflict')
   LastModified Datetime [note: "Thời gian cập nhật gần nhất"]
-  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
   
   SyncRetryCount Int
   SyncErrorMessage Text [note: "Lỗi đồng bộ gần nhất: mô tả lỗi nếu SyncStatus = Failed"]
@@ -85,6 +85,9 @@ Table RemoteInspection {
   Inspector Text [not null, ref: > InspectionCore.Inspector]
   Technician Text [ref: > InspectionCore.Inspector]
   // ... Rest of fields in InspectionCore
+
+  // State tracking
+  InspectionStatus Enum('Submitted', 'In Review', 'Approved', 'Rejected', 'Closed') [note: "Trạng thái kiểm kê"]
   
   // Tracking fields
   Recorded Timestamp [note: "Thời gian record được tạo ra"]
@@ -92,6 +95,8 @@ Table RemoteInspection {
 
   // Sync metadata
   Modified Datetime [note: "Server last modified time (SharePoint Modified)"]
+  LastSynced Datetime [note: "Thời gian đồng bộ gần nhất"]
+
 }
 
 
@@ -104,7 +109,11 @@ Table MediaCore {
   Type Enum('image', 'video') [note: "Loại media: ảnh hoặc video"]
   Caption Text [note: "Chú thích do người dùng nhập"]
   Captured timestamp [note: "Thời gian chụp"]
-  CapturedBy String [note: "Người chụp (Email hoặc tên)"]
+  CapturedBy String [note: "Logged in user (Email)"]
+
+  // Content
+  FileName Text [note: ""]
+  FileContent Blob [note: "Nội dung hình ảnh in blob/base64"]
 }
 
 Table LocalMedia {
@@ -115,9 +124,8 @@ Table LocalMedia {
 
   // Local Metadata (PowerApps)
   FilePath String [note: "Đường dẫn nội bộ trên thiết bị"]
-  FileContent blob [note: "Base64 hoặc binary content - chỉ local, không đồng bộ"]
-  LocalSaved boolean [note: "Đã lưu cục bộ bằng SaveData() hay chưa"]
-  LocalCollectionId String [note: "ID duy nhất trong bộ nhớ tạm của PowerApps"]
+  FileContent Blob [ref: > MediaCore.FileContent]
+  IsSavedLocally boolean [note: "Đã lưu cục bộ bằng SaveData() hay chưa"]
 
   // Sync Info
   SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed') [note: "Trạng thái đồng bộ"]
@@ -136,18 +144,6 @@ Table RemoteMedia {
 
   // Remote Metadata (SharePoint)
   FileName String [note: "Tên tệp đính kèm trên SharePoint"]
-  FileContent Base64 [note: "Nội dung hình ảnh in binaries"]
+  FileContent Blob [ref: > MediaCore.FileContent]
   RemoteUrl String [note: "Đường dẫn đến tệp sau khi đồng bộ"]
-}
-
-Table MediaSyncLog {
-  LogId UUID [pk]
-  MediaId UUID [ref: > MediaCore.MediaId]
-  InspectionId UUID [ref: > InspectionCore.InspectionId]
-  UserEmail String
-  Timestamp datetime
-  Action Enum('Upload', 'Retry', 'Failure', 'Success')
-  Message Text
-  DeviceId String
-  AppVersion String
 }
