@@ -16,7 +16,7 @@ jobs:
 
     - name: Authenticate to Power Platform
       run: |
-        pac auth create --url ${{ secrets.ENV_URL_DEV }} --clientId ${{ secrets.CLIENT_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+        pac auth create --applicationId ${{ secrets.CLIENT_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }} --environment ${{ secrets.ENV_URL_DEV }}
 
     - name: Run pac whoami
       run: |
