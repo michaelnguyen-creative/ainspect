@@ -1,0 +1,24 @@
+name: Power Platform CLI Hello World
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-cli:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Power Platform CLI
+      run: |
+        dotnet tool install --global Microsoft.PowerApps.CLI.Tool
+        refreshenv
+
+    - name: Authenticate to Power Platform
+      run: |
+        pac auth create --url ${{ secrets.ENV_URL_DEV }} --clientId ${{ secrets.CLIENT_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+
+    - name: Run pac whoami
+      run: |
+        pac org who
