@@ -13,7 +13,6 @@ jobs:
     - name: Install Power Platform CLI
       run: |
         dotnet tool install --global Microsoft.PowerApps.CLI.Tool
-        refreshenv
 
     - name: Authenticate to Power Platform
       run: |
