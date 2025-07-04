@@ -17,7 +17,7 @@ jobs:
     # Authenticate to source environment (Prod A)
     - name: Authenticate to Source Env (Prod A)
       run: |
-        pac auth create --deviceCode --environment ${{ ENV_ID_PROD_01 }}
+        pac auth create --deviceCode --environment ${{ secrets.ENV_ID_PROD_01 }}
 
     # Export solution from source
     - name: Export solution from source
