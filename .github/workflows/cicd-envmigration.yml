@@ -1,0 +1,45 @@
+name: Power Platform Solution Migration
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate-solution:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Power Platform CLI
+      run: |
+        dotnet tool install --global Microsoft.PowerApps.CLI.Tool
+
+    # Authenticate to source environment (Prod A)
+    - name: Authenticate to Source Env (Prod A)
+      run: |
+        pac auth create --deviceCode --environment ${{ ENV_ID_PROD_01 }}
+
+    # Export solution from source
+    - name: Export solution from source
+      run: |
+        pac solution export --name ${{ secrets.SRC_SOLUTION_NAME }} --path solution.zip --managed false
+
+    # Unpack solution
+    - name: Unpack solution
+      run: |
+        pac solution unpack --zipfile solution.zip --folder solutions/${{ secrets.SRC_SOLUTION_NAME }}
+
+    # Authenticate to target environment (Prod B)
+    - name: Authenticate to Target Env (Prod B)
+      run: |
+        pac auth create --deviceCode --environment ${{ secrets.ENV_ID_PROD_02 }}
+
+    # Pack solution
+    - name: Pack solution
+      run: |
+        pac solution pack --folder solutions/${{ secrets.SRC_SOLUTION_NAME }} --zipfile solution.zip
+
+    # Import solution to target
+    - name: Import solution to target
+      run: |
+        pac solution import --path solution.zip --async --force-overwrite
