@@ -46,9 +46,9 @@ Power Platform
 
 ### Contacts
 
-| Resource                  | Resource Type         | PIC                       |
-| ------------------------- | --------------------- | ------------------------- |
-| amd.auto@gemadept.com.vn  | Automation Account    | trungdna@gemadept.com.vn  |
-| GMDQLTS-QLTSdata          | SharePoint Site       | trungdna@gemadept.com.vn  |
-| MS365/Power Platform      | GEMADEPT Tenant       | nhutndq@gemadept.com.vn   |
+| Resource                      | Resource Type         | PIC                       |
+| ----------------------------- | --------------------- | ------------------------- |
+| amd.auto@gemadept.com.vn      | Automation Account    | trungdna@gemadept.com.vn  |
+| GMDQLTS-QLTSdata              | App Data (SharePoint) | trungdna@gemadept.com.vn  |
+| MS365/Power Platform          | GEMADEPT Tenant       | nhutndq@gemadept.com.vn   |
 
