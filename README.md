@@ -23,16 +23,32 @@ Password: VenNRyzhXj6Biz@
 ### Deployment
 
 Power Platform
-| Environment   | Type        | App name              | Description                                                    |
-| ------------- | ----------- | --------------------- | -------------------------------------------------------------- |
-| GMD.CDS.PROD  | Dev/UAT     | Kiểm kê tài sản UAT   | Môi trường dev & test ban đầu                                  |
-| DX.PROD01     | Production  | Kiểm kê tài sản       | Môi trường production hiện tại sau khi đã migrate data source  |
+| Environment   | Type        | App name              | Description                                                    | System Administrator
+| ------------- | ----------- | --------------------- | -------------------------------------------------------------- | -------------------------------- |
+| GMD.CDS.PROD  | Dev/UAT     | Kiểm kê tài sản UAT   | Môi trường dev & test ban đầu                                  | 
+| DX.PROD01     | Production  | Kiểm kê tài sản       | Môi trường production hiện tại sau khi đã migrate data source  | Nhut.DB@GMDCorp.onmicrosoft.com  |
 
 ### Data sources
 
-| Location    | Url                                                                                                         | App name             | 
-| ----------  | ----------------------------------------------------------------------------------------------------------- | -------------------- |
-| SharePoint  | [GMDQLTS-QLTSdata/Inspections](https://gmdcorp.sharepoint.com/sites/GMDQLTS-QLTSdata/Lists/Inspections)     | Kiểm kê tài sản      |
-| SharePoint  | [GMDQLTS-QLTSdata/Assets](https://gmdcorp.sharepoint.com/sites/GMDQLTS-QLTSdata/Lists/Assets)               | Kiểm kê tài sản      |
-| SharePoint  | [gmd.dx/Inspections](https://gmdcorp.sharepoint.com/sites/gmd.dx/Lists/Inspections)     | Kiểm kê tài sản UAT  |
-| SharePoint  | [gmd.dx/Assets](https://gmdcorp.sharepoint.com/sites/gmd.dx/Lists/Assets)               | Kiểm kê tài sản UAT  |
+| App name             | Location    | Url                                                                                                         | App name             | 
+| -------------------- | ----------  | ----------------------------------------------------------------------------------------------------------- | -------------------- |
+| Kiểm kê tài sản      | SharePoint  | [GMDQLTS-QLTSdata/Inspections](https://gmdcorp.sharepoint.com/sites/GMDQLTS-QLTSdata/Lists/Inspections)     | Kiểm kê tài sản      |
+| Kiểm kê tài sản      | SharePoint  | [GMDQLTS-QLTSdata/Assets](https://gmdcorp.sharepoint.com/sites/GMDQLTS-QLTSdata/Lists/Assets)               | Kiểm kê tài sản      |
+| Kiểm kê tài sản UAT  | SharePoint  | [gmd.dx/Inspections](https://gmdcorp.sharepoint.com/sites/gmd.dx/Lists/Inspections)                         | Kiểm kê tài sản UAT  |
+| Kiểm kê tài sản UAT  | SharePoint  | [gmd.dx/Assets](https://gmdcorp.sharepoint.com/sites/gmd.dx/Lists/Assets)                                   | Kiểm kê tài sản UAT  |
+
+### App Source
+
+| Solution name        | Env        | Connection Ref  | Connection                | Publisher                            |
+| -------------------- | ---------- | --------------- | ------------------------- | ------------------------------------ |
+| ADM Asset Inspection | DX.PROD01  | SP_ADM_DATA     | amd.auto@gemadept.com.vn  | GMD Digital Transformation (GMD_DX)  |
+
+
+### Contacts
+
+| Resource                  | Resource Type         | PIC                       |
+| ------------------------- | --------------------- | ------------------------- |
+| amd.auto@gemadept.com.vn  | Automation Account    | trungdna@gemadept.com.vn  |
+| GMDQLTS-QLTSdata          | SharePoint Site       | trungdna@gemadept.com.vn  |
+| MS365/Power Platform      | GEMADEPT Tenant       | nhutndq@gemadept.com.vn   |
+
