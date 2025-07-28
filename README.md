@@ -3,6 +3,7 @@
 ### Data flow
 
 Push: Captured => Local => Remote (SharePoint)
+
 Pull: Remote (SharePoint) => Downloaded => Local
 
 | Collection         | Logic      | Description                                    | ...                                   |
