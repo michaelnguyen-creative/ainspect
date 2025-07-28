@@ -1,6 +1,6 @@
 Table Asset {
-  AssetId String [pk, note: "Mã định danh: Mã định danh duy nhất cho tài sản (do hệ thống tạo)\n\nAsset ID: Unique identifier for the asset (system-generated)"]
-  AssetTag String [not null, note: "Mã tài sản: Mã dễ đọc của tài sản\n\nAsset Tag: Human-readable asset tag"]
+  AssetId String [pk, note: "ID tài sản (do hệ thống tạo)\n\nUnique identifier for the asset (system-generated)"]
+  AssetTag String [not null, note: "Mã định danh tài sản \n\nAsset Tag: Human-readable asset tag"]
   Description String [note: "Tên tài sản: Mô tả ngắn gọn về tài sản\n\nDescription: Brief description of the asset"]
   AssetType String [note: "Loại TS: Loại/danh mục tài sản (ví dụ: Xe đầu kéo)\n\nAsset Type: Type/category of the asset (e.g., Xe đầu kéo)"]
   OwningUnit String [note: "ĐV sở hữu: Đơn vị/bộ phận sở hữu tài sản\n\nOwning Unit: Unit or department that owns the asset"]
@@ -34,9 +34,10 @@ Table InspectionCore {
   IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
   AbsenceReason Text [note: "Lý do: giải thích nếu tài sản không hiện hữu"]
 
+  AssetColor Text [note: "Màu sắc tài sản tại thời điểm kiểm kê"]
   UsageStatus Enum('Đang sử dụng', 'Ngừng sử dụng') [note: "Tình trạng sử dụng của tài sản tại ngày kiểm kê"]
   DeactivationReason Text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
-  ConditionRating Int [note: "Điểm đánh giá kiểm kê, từ 1-5 với 5 = Tốt, 4 = Khá, 3 = Trung bình, 2 = Kém, 1 = Hư hỏng"]
+  ConditionRating Int [note: "Đánh giá kiểm kê, từ 1-5 với 5 = Tốt, 4 = Khá, 3 = Trung bình, 2 = Kém, 1 = Hư hỏng"]
   ConditionDescription Text [note: "Mô tả hiện trạng tài sản"]
   OperationalFeedback Text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
   AdditionalNotes Text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
