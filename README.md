@@ -6,11 +6,11 @@ Push: Captured => Local => Remote (SharePoint)
 
 Pull: Remote (SharePoint) => Downloaded => Local
 
-| Collection         | Logic                          | Description                               | ...                                   |
-| ------------------ | ------------------------------ | ----------------------------------------- | ---------------------------------------------- |
-| Captured           | Captured = Save(Record)        | Captured data, waiting for sync           | ...  |
-| Downloaded         | Downloaded = Download(Remote)  | Synced data downloaded for offline access | ...  |
-| Local              | Local = Captured + Downloaded  | Display/read only                         | ...  |
+| Collection         | Logic                          | Description                               |
+| ------------------ | ------------------------------ | ----------------------------------------- |
+| Captured           | Captured = Save(Record)        | Captured data, waiting for sync           |
+| Downloaded         | Downloaded = Download(Remote)  | Synced data downloaded for offline access |
+| Local              | Local = Captured + Downloaded  | Display/read only                         |
 
 ### Data model
 
@@ -25,7 +25,7 @@ Password: VenNRyzhXj6Biz@
 Power Platform
 | Environment   | Type        | App name              | Description                                                    | System Administrator
 | ------------- | ----------- | --------------------- | -------------------------------------------------------------- | -------------------------------- |
-| GMD.CDS.PROD  | Dev/UAT     | Kiểm kê tài sản UAT   | Môi trường dev & test ban đầu                                  | 
+| GMD.CDS.PROD  | Dev/UAT     | Kiểm kê tài sản UAT   | Môi trường dev & test ban đầu                                  | Nhut.DB@GMDCorp.onmicrosoft.com  |
 | DX.PROD01     | Production  | Kiểm kê tài sản       | Môi trường production hiện tại sau khi đã migrate data source  | Nhut.DB@GMDCorp.onmicrosoft.com  |
 
 ### Data sources
