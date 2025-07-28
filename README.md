@@ -43,6 +43,9 @@ Power Platform
 | -------------------- | ---------- | --------------- | ------------------------- | ------------------------------------ |
 | ADM Asset Inspection | DX.PROD01  | SP_ADM_DATA     | amd.auto@gemadept.com.vn  | GMD Digital Transformation (GMD_DX)  |
 
+### CI/CD
+
+This repo also contains an CD pipeline that can migrate the app (Power platform solution) from one environment  to another. More can be found at '.github/workflows/cicd-envmigration.yml'
 
 ### Contacts
 
