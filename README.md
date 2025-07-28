@@ -16,3 +16,5 @@ Pull: Remote (SharePoint) => Downloaded => Local
 [michaelnguyen.creative/ai-nspect](https://dbdocs.io/michaelnguyen.creative/ai-nspect)
 
 Password: VenNRyzhXj6Biz@
+
+[Source](https://dbdiagram.io/d/ai-nspect-684eb10c3cc77757c8ef42c3)
