@@ -7,8 +7,8 @@ Table Asset {
   OperatingUnit String [note: "ĐV khai thác: Đơn vị/bộ phận vận hành tài sản\n\nOperating Unit: Unit or department operating the asset"]
   LicensePlate String [note: "Biển số: Số biển số chính\n\nLicense Plate: Primary license plate number"]
   SecondaryLicensePlate String [note: "Biển số 2: Số biển số phụ hoặc thay thế\n\nSecondary License Plate: Secondary or alternate license plate"]
-  AssetNum String [note: "Mã TS: Số tài sản nội bộ trong ERP/Finance\n\nAsset Number: Internal ERP/Finance asset number"]
-  ManufactureYear Int [note: "Năm sản xuất: Năm sản xuất tài sản\n\nManufacture Year: Year the asset was manufactured"]
+  AssetNum String [note: "Mã tài sản (xuất từ Oracle) \n\nAsset Number from Oracle"]
+  ManufactureYear Int [note: "Năm sản xuất của tài sản\n\nManufacture Year: Year the asset was manufactured"]
   CountryOfOrigin String [note: "Nơi sản xuất: Quốc gia sản xuất tài sản\n\nCountry of Origin: Country where the asset was manufactured"]
   Manufacturer String [note: "Công ty sản xuất: Tên nhà sản xuất\n\nManufacturer: Manufacturer name"]
   LoadCapacity float [note: "Trọng tải: Khả năng tải trọng tối đa (ví dụ: 36.830 tấn)\n\nLoad Capacity: Maximum load capacity in tons (e.g., 36.830)"]
@@ -27,8 +27,8 @@ Table Asset {
 Table InspectionCore {
   InspectionId UUID [pk]
   AssetId UUID [not null, ref: > Asset.AssetId, note: "Tài sản được kiểm kê"]
-  Inspector Text [not null, note: "Người thực hiện kiểm kê"]
-  Technician Text [note: "Kỹ thuật viên: người hỗ trợ kỹ thuật nếu có"]
+  Inspector Text [not null, note: "Người kiểm kê"]
+  Technician Text [note: "Kỹ thuật viên: người hỗ trợ kỹ thuật"]
 
   // Form
   IsPresent boolean [note: "Tài sản hiện hữu: đánh dấu tài sản có mặt hay không"]
@@ -36,21 +36,21 @@ Table InspectionCore {
 
   AssetColor Text [note: "Màu sắc tài sản tại thời điểm kiểm kê"]
   UsageStatus Enum('Đang sử dụng', 'Ngừng sử dụng') [note: "Tình trạng sử dụng của tài sản tại ngày kiểm kê"]
-  DeactivationReason Text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"]
-  ConditionRating Int [note: "Đánh giá kiểm kê, từ 1-5 với 5 = Tốt, 4 = Khá, 3 = Trung bình, 2 = Kém, 1 = Hư hỏng"]
-  ConditionDescription Text [note: "Mô tả hiện trạng tài sản"]
+  DeactivationReason Text [note: "Lý do ngừng sử dụng: mô tả nguyên nhân"] 
+  ConditionRating Enum("Tốt", "Khá", "Trung bình", "Kém", "Hư hỏng") [note: "Tình trạng hiện tại: Đánh giá tình trạng tài sản tại thời điểm kiểm kê"]
   OperationalFeedback Text [note: "Góp ý/đề xuất từ đơn vị vận hành/sử dụng"]
   AdditionalNotes Text [note: "Ghi chú bổ sung: thông tin thêm từ người kiểm kê"]
-  TechnicalCondition Text [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
+  TechnicalCondition Enum("Hoạt động bình thường", "Tăng cường bảo trì", "Cần sửa chữa", "Hư hỏng không thể sử dụng", "Thiếu phụ kiện/bộ phận") [note: "Tình trạng kỹ thuật: mô tả trạng thái động cơ, khung sườn, v.v."]
 
-  InspectionType Enum('Định kỳ', 'Bổ sung', 'Khẩn cấp') [note: "Loại kiểm kê, mặc định = Định kỳ"]
-  InspectionMethod Enum('Manual')
-  LocationOfInspection String [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
-  
+  InspectionType Enum('Định kỳ') [note: "Loại kiểm kê, mặc định = Định kỳ"]
+  InspectionMethod Enum('Manual')  
   // State
 
   // Metadata
   InspectionDate Date [note: "Ngày kiểm kê: ngày thực hiện kiểm kê"]
+  InspectedSite Text [note: "Đơn vị được kiểm kê"]
+  LocationOfInspection String [note: "Địa điểm kiểm kê: nơi thực hiện kiểm kê tài sản"]
+
   GeoLocation String [note: "Vị trí GPS: toạ độ vị trí kiểm kê (lat/lng)"]
 }
 
@@ -107,14 +107,13 @@ Table MediaCore {
   AssetId UUID [not null, ref: > InspectionCore.AssetId, note: "Remote InspectionId"]
 
   // Core Metadata
-  Type Enum('image', 'video') [note: "Loại media: ảnh hoặc video"]
-  Caption Text [note: "Chú thích do người dùng nhập"]
+  Type Enum('image') [note: "Loại media, default = image"]
   Captured timestamp [note: "Thời gian chụp"]
   CapturedBy String [note: "Logged in user (Email)"]
 
   // Content
   FileName Text [note: ""]
-  FileContent Blob [note: "Nội dung hình ảnh in blob/base64"]
+  FileRef Blob [note: "Nội dung hình ảnh in blob/base64"]
 }
 
 Table LocalMedia {
@@ -124,9 +123,8 @@ Table LocalMedia {
   // ...rest of fields in MediaCore
 
   // Local Metadata (PowerApps)
-  FilePath String [note: "Đường dẫn nội bộ trên thiết bị"]
-  FileContent Blob [ref: > MediaCore.FileContent]
-  IsSavedLocally boolean [note: "Đã lưu cục bộ bằng SaveData() hay chưa"]
+  FileRef Blob [ref: > MediaCore.FileRef]
+  IsSavedLocally boolean [note: "Đã lưu vào device local storage bằng SaveData() hay chưa"]
 
   // Sync Info
   SyncStatus Enum('Pending', 'Syncing', 'Synced', 'Failed') [note: "Trạng thái đồng bộ"]
@@ -145,6 +143,6 @@ Table RemoteMedia {
 
   // Remote Metadata (SharePoint)
   FileName String [note: "Tên tệp đính kèm trên SharePoint"]
-  FileContent Blob [ref: > MediaCore.FileContent]
+  FileContent Blob [ref: > MediaCore.FileRef]
   RemoteUrl String [note: "Đường dẫn đến tệp sau khi đồng bộ"]
 }
