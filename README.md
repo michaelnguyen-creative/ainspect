@@ -1,12 +1,5 @@
 # Documentation
 
-`Local Inspections` & `Local Assets` for Display only
-- Limited set of properties => only what is required for the feature
-
-
-Canonical data source = `Captured` & `Downloaded`
-- Full properties
-
 ### Data flow
 
 Push: Captured => Local => Remote (SharePoint)
@@ -21,4 +14,5 @@ Pull: Remote (SharePoint) => Downloaded => Local
 ### Data model
 
 [michaelnguyen.creative/ai-nspect](https://dbdocs.io/michaelnguyen.creative/ai-nspect)
+
 Password: VenNRyzhXj6Biz@
