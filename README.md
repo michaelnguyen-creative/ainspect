@@ -1,4 +1,4 @@
-# Documentation
+# Sytem Documentation
 
 ### Data flow
 
@@ -19,3 +19,11 @@ Pull: Remote (SharePoint) => Downloaded => Local
 Password: VenNRyzhXj6Biz@
 
 [Source](https://dbdiagram.io/d/ai-nspect-684eb10c3cc77757c8ef42c3)
+
+### Deployment
+
+Power Platform
+| Env                | Type      | Description                                    | ...                                   |
+| ------------------ | ------------------ | ----------------------------------------- | ---------------------------------------------- |
+| GMD.CDS.PROD           | Dev/UAT  | Môi trường dev & test ban đầu          | ...  |
+| DX.PROD01         | Production  | Môi trường production hiện tại | ...  |
